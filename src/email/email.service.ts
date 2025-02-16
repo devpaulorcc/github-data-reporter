@@ -5,22 +5,17 @@ import { MailerService } from '@nestjs-modules/mailer';
 export class EmailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendEmail(
-    to: string,
-    subject: string,
-    template: string,
-    context: any,
-  ): Promise<void> {
+  async sendEmail(to: string, subject: string, body: string): Promise<void> {
     try {
       await this.mailerService.sendMail({
         to,
         subject,
-        template,
-        context,
-        from: process.env.MAIL_FROM,
+        text: body,
       });
+
+      console.log(`✅ E-mail enviado com sucesso para ${to}`);
     } catch (error) {
-      throw new Error('Error sending email');
+      console.error(`❌ Erro ao enviar e-mail: ${error.message}`);
     }
   }
 }

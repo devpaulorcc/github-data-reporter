@@ -1,32 +1,27 @@
-import { Module } from '@nestjs/common';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { Module } from '@nestjs/common';
 import { EmailService } from './email.service';
-import { EmailController } from './email.controller';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    MailerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        transport: {
-          host: configService.get<string>('MAIL_HOST'),
-          port: configService.get<number>('MAIL_PORT'),
-          secure: false,
-          auth: {
-            user: configService.get<string>('MAIL_USER'),
-            pass: configService.get<string>('MAIL_PASS'),
-          },
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.MAIL_HOST,
+        port: Number(process.env.MAIL_PORT),
+        secure: false, 
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS,
         },
-        defaults: {
-          from: configService.get<string>('MAIL_FROM'),
-        },
-      }),
+      },
+      defaults: {
+        from: `"Relatório GitHub" <${process.env.MAIL_FROM}>`,
+      },
     }),
   ],
-  controllers: [EmailController],
   providers: [EmailService],
   exports: [EmailService],
 })

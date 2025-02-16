@@ -10,9 +10,8 @@ export class EmailController {
     @Body('to') to: string,
     @Body('subject') subject: string,
     @Body('template') template: string,
-    @Body('context') context: any,
   ) {
-    await this.emailService.sendEmail(to, subject, template, context);
+    await this.emailService.sendEmail(to, subject, template);
     return { message: 'Email sent successfully' };
   }
 }
