@@ -10,7 +10,7 @@ dotenv.config();
 export class CronService {
   constructor(private readonly emailService: EmailService) {}
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron('0 0 20 * * 5')
   async generateAndSendReport(): Promise<void> {
     const username = process.env.GITHUB_USERNAME || 'devpaulorcc';
     const to = process.env.MAIL_FROM;
